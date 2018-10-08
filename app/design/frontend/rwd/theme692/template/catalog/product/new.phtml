@@ -1,0 +1,164 @@
+<?php
+/**
+ * Magento
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Academic Free License (AFL 3.0)
+ * that is bundled with this package in the file LICENSE_AFL.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://opensource.org/licenses/afl-3.0.php
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@magentocommerce.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade Magento to newer
+ * versions in the future. If you wish to customize Magento for your
+ * needs please refer to http://www.magentocommerce.com for more information.
+ *
+ * @category    design
+ * @package     base_default
+ * @copyright   Copyright (c) 2012 Magento Inc. (http://www.magentocommerce.com)
+ * @license     http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
+ */
+?>
+<?php
+$_productCollection=$this->getLoadedProductCollection();
+$_helper = $this->helper('catalog/output');
+?>
+<?php if (($_products = $this->getProductCollection()) && $_products->getSize()): ?>
+<?php
+$_collectionSize = $_products->getSize();
+
+if($_collectionSize > 6)  {
+    $_sliderOnOf = "homeSider";
+    $_itemwidth = "free";
+    $_homeIndent = "homeIndent";
+    $_slidControl = '<div class="home-carousel-control">
+                <a class="carousel-prev fa fa-chevron-left" href="#"></a>
+                    <a class="carousel-next fa fa-chevron-right" href="#"></a>
+            </div>';
+} else {
+    $_sliderOnOf = "grid-clol-6";
+    $_itemwidth = "col-item6";
+}
+?>
+
+<?php
+    $cateList = [];
+    $cateSlugsOfProduct = [];
+    foreach ($_products->getItems() as $_product){
+        $categoryIds = $_product->getCategoryIds();
+        $slug = '';
+        if (count($categoryIds)>0){
+            foreach ($categoryIds as $categoryId){
+                $category = Mage::getModel('catalog/category')->setStoreId(Mage::app()->getStore()->getId())->load($categoryId);
+                $cateSlug = $category->getSlug();
+                $cateList[$categoryId] = [
+                    'slug'=>$cateSlug,
+                    'name'=>$category->getName()
+                ];
+                $slug .= $cateSlug .' ';
+            }
+        }
+        $cateSlugsOfProduct[$_product->getId()] = $slug;
+    }
+?>
+
+    <!-- ****** Quick View Modal Area Start ****** -->
+    <div class="modal fade" id="quickview" tabindex="-1" role="dialog" aria-labelledby="quickview" aria-hidden="true">
+        <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <button type="button" class="close btn" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+
+                <div class="modal-body">
+                    <div class="quickview_body">
+                        <div class="container">
+                            <div class="row">
+                                <div class="col-12 col-lg-5">
+                                    <div class="quickview_pro_img">
+                                        <img src="img/product-img/product-1.jpg" alt="">
+                                    </div>
+                                </div>
+                                <div class="col-12 col-lg-7">
+                                    <div class="quickview_pro_des">
+                                        <h4 class="title">Boutique Silk Dress</h4>
+                                        <div class="top_seller_product_rating mb-15">
+                                            <i class="fa fa-star" aria-hidden="true"></i>
+                                            <i class="fa fa-star" aria-hidden="true"></i>
+                                            <i class="fa fa-star" aria-hidden="true"></i>
+                                            <i class="fa fa-star" aria-hidden="true"></i>
+                                            <i class="fa fa-star" aria-hidden="true"></i>
+                                        </div>
+                                        <h5 class="price">$120.99 <span>$130</span></h5>
+                                        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Mollitia expedita quibusdam aspernatur, sapiente consectetur accusantium perspiciatis praesentium eligendi, in fugiat?</p>
+                                        <a href="#">View Full Product Details</a>
+                                    </div>
+                                    <div class="share_wf mt-30">
+                                        <p>Share With Friend</p>
+                                        <div class="_icon">
+                                            <a href="#"><i class="fa fa-facebook" aria-hidden="true"></i></a>
+                                            <a href="#"><i class="fa fa-twitter" aria-hidden="true"></i></a>
+                                            <a href="#"><i class="fa fa-pinterest" aria-hidden="true"></i></a>
+                                            <a href="#"><i class="fa fa-google-plus" aria-hidden="true"></i></a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+<!-- ****** Quick View Modal Area End ****** -->
+<div class="home-id <?php echo $_homeIndent;?> new_arrivals_area section_padding_100_0 clearfix">
+    <div class="container">
+        <div class="row">
+            <div class="col-12">
+                <div class="section_heading text-center">
+                    <h2>New Arrivals</h2>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="karl-projects-menu">
+        <div class="text-center portfolio-menu">
+            <button class="btn active" data-filter="*">ALL</button>
+            <?php foreach ($cateList as $cateId => $value):?>
+                <button class="btn" data-filter=".<?php echo $value['slug'];?>"><?php echo $value['name']?></button>
+            <?php endforeach;?>
+        </div>
+    </div>
+    <div class="container">
+        <div class="row karl-new-arrivals">
+
+            <?php foreach ($_products->getItems() as $_product): ?>
+
+                <!-- Single gallery Item Start -->
+                <div class="col-12 col-sm-6 col-md-4 single_gallery_item <?php if(isset($cateSlugsOfProduct[$_product->getId()])) echo $cateSlugsOfProduct[$_product->getId()];?> wow fadeInUpBig" data-wow-delay="0.2s">
+                    <!-- Product Image -->
+                    <div class="product-img">
+                        <img src="<?php echo $this->helper('catalog/image')->init($_product, 'small_image')->resize(250, 383); ?>" alt="<?php echo $this->stripTags($this->getImageLabel($_product, 'small_image'), null, true) ?>">
+                        <div class="product-quickview">
+                            <a href="#" data-toggle="modal" data-target="#quickview"><i class="ti-plus"></i></a>
+                        </div>
+                    </div>
+                    <!-- Product Description -->
+                    <div class="product-description">
+                        <h4 class="product-price">
+                            <?php echo $this->getPriceHtml($_product, true, '-new') ?>
+                        </h4>
+                        <p><?php echo $this->htmlEscape($_product->getName()) ?></p>
+                    </div>
+                </div>
+            <?php endforeach; ?>
+        </div>
+    </div>
+    <?php endif; ?>
+</div>
+

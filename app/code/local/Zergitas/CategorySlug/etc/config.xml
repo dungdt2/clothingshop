@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+<config>
+    <modules>
+        <Zergitas_CategorySlug>
+            <version>0.1.1</version>
+        </Zergitas_CategorySlug>
+    </modules>
+    <global>
+        <resources>
+            <zergitas_categoryslug_setup>
+                <setup>
+                    <module>Zergitas_CategorySlug</module>
+                    <class>Mage_Catalog_Model_Resource_Eav_Mysql4_Setup</class>
+                </setup>
+            </zergitas_categoryslug_setup>
+        </resources>
+    </global>
+</config>

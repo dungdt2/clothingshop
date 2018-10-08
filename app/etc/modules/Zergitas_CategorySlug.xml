@@ -1,0 +1,9 @@
+<?xml version="1.0"?>
+<config>
+    <modules>
+        <Zergitas_CategorySlug>
+            <active>true</active>
+            <codePool>local</codePool>
+        </Zergitas_CategorySlug>
+    </modules>
+</config>
